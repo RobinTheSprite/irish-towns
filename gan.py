@@ -32,10 +32,14 @@ def build_generator():
 def build_discriminator():
     model = Sequential()
     model.add(Conv1D(50, 2, input_shape = name_shape, activation="relu"))
+    model.add(BatchNormalization(momentum=0.8))
     model.add(MaxPooling1D(strides=2))
+    model.add(BatchNormalization(momentum=0.8))
     model.add(Conv1D(50, 2, activation="relu"))
+    model.add(BatchNormalization(momentum=0.8))
     model.add(Flatten())
     model.add(Dense(50))
+    model.add(BatchNormalization(momentum=0.8))
     model.add(Dense(1, activation="sigmoid"))
 
     name = Input(shape=name_shape)
