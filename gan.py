@@ -1,14 +1,32 @@
 import numpy as np
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Input, Dense, Dropout, Activation, Flatten, Conv1D, MaxPooling1D
+from tensorflow.keras.layers import \
+    BatchNormalization, Input, Dense, \
+    Activation, Flatten, Conv1D, MaxPooling1D, \
+    Reshape
 import pickle
 
 
 name_shape = (50, 1)
+noise_shape = (100,)
 
 
 def build_generator():
-    pass
+    model = Sequential()
+
+    model.add(Dense(256, input_shape = noise_shape, activation="relu"))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(Dense(256))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(Dense(1024))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(Dense(np.product(name_shape), activation="tanh"))
+    model.add(Reshape(name_shape))
+
+    noise = Input(shape=noise_shape)
+    name = model(noise)
+
+    return Model(noise, name)
 
 
 def build_discriminator():
