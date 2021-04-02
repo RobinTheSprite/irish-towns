@@ -19,16 +19,6 @@ if os.path.exists("results.txt"):
   os.remove("results.txt")
 
 
-prediction = discriminator(name)
-
-combined = Model(Input(shape = noise_shape), prediction)
-discriminator.compile(loss="binary_crossentropy", optimizer="adam")
-
-train(epochs = 100, save_interval = 20)
-
-generator.save("generator.model.h5")
-
-
 def build_generator():
     model = Sequential()
 
@@ -127,5 +117,20 @@ def save(epoch):
     f.close()
 
 
-def save():
-    pass
+discriminator = build_discriminator()
+discriminator.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+generator = build_generator()
+z = Input(shape = noise_shape)
+name = generator(z)
+
+discriminator.trainable = False
+
+prediction = discriminator(name)
+
+combined = Model(z, prediction)
+combined.compile(loss="binary_crossentropy", optimizer="adam")
+
+train(epochs = 5000, save_interval = 100)
+
+# generator.save("generator.model.h5")
