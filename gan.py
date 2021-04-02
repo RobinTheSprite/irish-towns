@@ -18,9 +18,9 @@ name = generator(Input(shape = noise_shape))
 
 discriminator.trainable = False
 
-valid = discriminator(name)
+prediction = discriminator(name)
 
-combined = Model(Input(shape = noise_shape), valid)
+combined = Model(Input(shape = noise_shape), prediction)
 discriminator.compile(loss="binary_crossentropy", optimizer="adam")
 
 
