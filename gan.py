@@ -12,8 +12,7 @@ CHARSET = (' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 name_shape = (50, 1)
 noise_shape = (100,)
 
-discriminator = build_discriminator()
-discriminator.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+DATA = pickle.load(open("data.pickle", "rb"))
 
 if os.path.exists("results.txt"):
   os.remove("results.txt")
@@ -57,7 +56,8 @@ def build_discriminator():
 
 
 def train(epochs, batch_size=32, save_interval=50):
-    data = pickle.load(open("data.pickle", "rb"))
+    data = DATA
+    data = data * 2 - 1
 
     valid_labels = np.ones((batch_size, 1))
     fake_labels = np.zeros((batch_size, 1))
