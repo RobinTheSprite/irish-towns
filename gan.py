@@ -67,7 +67,7 @@ def train(epochs, batch_size=32, save_interval=50):
         i = np.random.randint(0, data.shape[0], batch_size)
         real_names = data[i]
 
-        noise = np.random.normal(0.5, 0.5, (batch_size, noise_shape))
+        noise = np.random.normal(0, 1, (batch_size, noise_shape[0]))
         fake_names = generator.predict(noise)
 
         loss_real = discriminator.train_on_batch(real_names, valid_labels)
