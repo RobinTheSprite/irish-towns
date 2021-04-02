@@ -80,11 +80,13 @@ def train(epochs, batch_size=32, save_interval=50):
         noise = np.random.normal(0.5, 0.5, (batch_size, noise_shape))
         fake_names = generator.predict(noise)
 
-        discriminator.train_on_batch(real_names, valid_labels)
-        discriminator.train_on_batch(fake_names, fake_labels)
-        # loss_combined = 0.5 * np.add(loss_real, loss_fake)
+        loss_real = discriminator.train_on_batch(real_names, valid_labels)
+        loss_fake =  discriminator.train_on_batch(fake_names, fake_labels)
+        loss_combined = 0.5 * np.add(loss_real, loss_fake)
 
-        combined.train_on_batch(noise, valid_labels)
+        generator_loss = combined.train_on_batch(noise, valid_labels)
+
+        print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, loss_combined[0], 100*loss_combined[1], generator_loss))
 
         if epoch % save_interval == 0:
             save()
