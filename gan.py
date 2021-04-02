@@ -23,6 +23,10 @@ prediction = discriminator(name)
 combined = Model(Input(shape = noise_shape), prediction)
 discriminator.compile(loss="binary_crossentropy", optimizer="adam")
 
+train(epochs = 100, save_interval = 20)
+
+generator.save("generator.model.h5")
+
 
 def build_generator():
     model = Sequential()
@@ -87,6 +91,3 @@ def train(epochs, batch_size=32, save_interval=50):
 
 def save():
     pass
-
-# model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
-# model.fit(data, labels, batch_size=50, validation_split=0.1, epochs=200)
