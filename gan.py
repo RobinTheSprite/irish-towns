@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import \
@@ -14,10 +15,9 @@ noise_shape = (100,)
 discriminator = build_discriminator()
 discriminator.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-generator = build_generator()
-name = generator(Input(shape = noise_shape))
+if os.path.exists("results.txt"):
+  os.remove("results.txt")
 
-discriminator.trainable = False
 
 prediction = discriminator(name)
 
@@ -89,7 +89,42 @@ def train(epochs, batch_size=32, save_interval=50):
         print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, loss_combined[0], 100*loss_combined[1], generator_loss))
 
         if epoch % save_interval == 0:
-            save()
+            save(epoch)
+
+
+def save(epoch):
+    num_of_names = 10
+    noise = np.random.normal(0, 1, (num_of_names, noise_shape[0]))
+    names_encoded = generator.predict(noise)
+
+    names_encoded = names_encoded.reshape((-1, names_encoded.shape[1]))
+    names_encoded = names_encoded * 0.5 + 0.5
+    names_encoded = names_encoded * len(CHARSET)
+    names_encoded = names_encoded.round()
+    names_encoded = np.clip(names_encoded, 0, len(CHARSET) - 1)
+
+    names = []
+    for name in names_encoded.tolist():
+        name_str = str()
+        for char_i in name:
+            try:
+                name_str += CHARSET[int(char_i)]
+            except IndexError as e:
+                print(f"Bad index {char_i}")
+                exit()
+
+
+        name_str.strip()
+        name_str += "\n"
+        names.append(name_str)
+
+    f = open("results.txt", "a")
+
+    f.write(f"Epoch {epoch}:\n")
+    f.write("\n")
+    f.writelines(names)
+    f.write("\n\n")
+    f.close()
 
 
 def save():
