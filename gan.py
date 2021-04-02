@@ -10,6 +10,19 @@ import pickle
 name_shape = (50, 1)
 noise_shape = (100,)
 
+discriminator = build_discriminator()
+discriminator.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+generator = build_generator()
+name = generator(Input(shape = noise_shape))
+
+discriminator.trainable = False
+
+valid = discriminator(name)
+
+combined = Model(Input(shape = noise_shape), valid)
+discriminator.compile(loss="binary_crossentropy", optimizer="adam")
+
 
 def build_generator():
     model = Sequential()
