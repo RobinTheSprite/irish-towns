@@ -63,7 +63,26 @@ def build_discriminator():
 
 def train(epochs, batch_size=32, save_interval=50):
     data = pickle.load(open("data.pickle", "rb"))
-    labels = pickle.load(open("labels.pickle", "rb"))
+
+    valid_labels = np.ones((batch_size, 1))
+    fake_labels = np.zeros((batch_size, 1))
+
+    for epoch in range(epochs):
+
+        i = np.random.randint(0, data.shape[0], batch_size)
+        real_names = data[i]
+
+        noise = np.random.normal(0.5, 0.5, (batch_size, noise_shape))
+        fake_names = generator.predict(noise)
+
+        discriminator.train_on_batch(real_names, valid_labels)
+        discriminator.train_on_batch(fake_names, fake_labels)
+        # loss_combined = 0.5 * np.add(loss_real, loss_fake)
+
+        combined.train_on_batch(noise, valid_labels)
+
+        if epoch % save_interval == 0:
+            save()
 
 
 def save():
