@@ -82,51 +82,26 @@ def make_testing_data(input_file, training_data_file, testing_data_file):
     f = open(testing_data_file, "w")
     f.writelines(testing_names)
 
-def pickle_data(f, not_irish_file):
-    irish_data = []
+def pickle_data(f):
+    data = []
     for line in f:
         line = line.strip("\n")
         name = line.split(" ")
         name = list(map(float, name))
-        irish_data.append(name)
+        data.append(name)
 
     f.close()
 
-    irish_labels = list(1 for _ in range(len(irish_data)))
+    irish_labels = list(1 for _ in range(len(data)))
 
-    irish_data = list(zip(irish_data, irish_labels))
+    data = list(zip(data, irish_labels))
 
-    not_irish_data = []
-    for line in not_irish_file:
-        line = line.strip("\n")
-        name = line.split(" ")
-        name = list(map(float, name))
-        not_irish_data.append(name)
-
-    not_irish_file.close()
-
-    not_irish_labels = list(0 for _ in range(len(not_irish_data)))
-
-    not_irish_data = list(zip(not_irish_data, not_irish_labels))
-
-    combined = irish_data + not_irish_data
-
-    random.shuffle(combined)
-
-    data = []
-    labels = []
-    for name, label in combined:
-        data.append(name)
-        labels.append(label)
+    random.shuffle(data)
 
     data = np.array(data).reshape((-1, 50, 1))
-    labels = np.array(labels)
 
     f = open("data.pickle", "wb")
     pickle.dump(data, f)
-    f.close()
-    f = open("labels.pickle", "wb")
-    pickle.dump(labels, f)
     f.close()
 
 
