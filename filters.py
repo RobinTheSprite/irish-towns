@@ -14,7 +14,7 @@ def get_unique_names(f, filename):
     f1.writelines(filtered)
 
 
-def normalize_data(f, filename):
+def encode_data(f, filename):
     encodings = []
     for line in f:
         line = line.strip("\n")
@@ -58,7 +58,7 @@ def make_random_strings():
     f.writelines(strings)
     f.close()
     f = open("random-strings.txt", "r")
-    normalize_data(f, "random-strings-encoded.txt")
+    encode_data(f, "random-strings-encoded.txt")
 
 def make_testing_data(input_file, training_data_file, testing_data_file):
     f = open(input_file, "r")
@@ -105,7 +105,6 @@ def pickle_data(f):
     f.close()
 
 
-# normalize_data(open("irish-towns-training.txt", "r"), "irish-towns-encoded.txt")
-# normalize_data(open("english-towns-training.txt", "r"), "english-towns-encoded.txt")
+encode_data(open("irish-towns-training.txt", "r"), "irish-towns-encoded.txt")
 
-pickle_data(open("irish-towns-encoded.txt", "r"), open("english-towns-encoded.txt", "r"))
+pickle_data(open("irish-towns-encoded.txt", "r"))
