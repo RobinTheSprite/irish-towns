@@ -9,7 +9,7 @@ import pickle
 
 CHARSET = (' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú')
 
-name_shape = (50, 1)
+name_shape = (50, 32)
 noise_shape = (100,)
 
 DATA = pickle.load(open("data.pickle", "rb"))
@@ -87,21 +87,11 @@ def save(epoch):
     noise = np.random.normal(0, 1, (num_of_names, noise_shape[0]))
     names_encoded = generator.predict(noise)
 
-    names_encoded = names_encoded.reshape((-1, names_encoded.shape[1]))
-    names_encoded = names_encoded * 0.5 + 0.5
-    names_encoded = names_encoded * len(CHARSET)
-    names_encoded = names_encoded.round()
-    names_encoded = np.clip(names_encoded, 0, len(CHARSET) - 1)
-
     names = []
     for name in names_encoded.tolist():
         name_str = str()
-        for char_i in name:
-            try:
-                name_str += CHARSET[int(char_i)]
-            except IndexError as e:
-                print(f"Bad index {char_i}")
-                exit()
+        for char_probabilities in name:
+            name_str += CHARSET[np.argmax(char_probabilities)]
 
 
         name_str.strip()

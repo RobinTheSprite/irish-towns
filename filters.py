@@ -1,6 +1,7 @@
 import random
 import pickle
 import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
 CHARSET = [' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú']
 
@@ -15,6 +16,9 @@ def get_unique_names(f, filename):
 
 
 def encode_data(f, filename):
+    onehot_labels = OneHotEncoder(sparse=False)
+    onehot_labels = onehot_labels.fit_transform(list([i] for i in range(len(CHARSET))))
+
     encodings = []
     for line in f:
         line = line.strip("\n")
@@ -22,14 +26,15 @@ def encode_data(f, filename):
 
         numeric = []
         for char in line:
-            numeric.append(str(CHARSET.index(char) / len(CHARSET)))
+            numeric.append(onehot_labels[CHARSET.index(char)])
 
-        out = " ".join(numeric)
-        out += "\n"
-        encodings.append(out)
+        encodings.append(numeric)
 
-    f1 = open(filename, "w")
-    f1.writelines(encodings)
+    random.shuffle(encodings)
+    encodings = np.array(encodings)
+
+    f1 = open(filename, "wb")
+    pickle.dump(encodings, f1)
 
 
 def lowercase(f, filename):
@@ -82,29 +87,5 @@ def make_testing_data(input_file, training_data_file, testing_data_file):
     f = open(testing_data_file, "w")
     f.writelines(testing_names)
 
-def pickle_data(f):
-    data = []
-    for line in f:
-        line = line.strip("\n")
-        name = line.split(" ")
-        name = list(map(float, name))
-        data.append(name)
 
-    f.close()
-
-    irish_labels = list(1 for _ in range(len(data)))
-
-    data = list(zip(data, irish_labels))
-
-    random.shuffle(data)
-
-    data = np.array(data).reshape((-1, 50, 1))
-
-    f = open("data.pickle", "wb")
-    pickle.dump(data, f)
-    f.close()
-
-
-encode_data(open("irish-towns-training.txt", "r"), "irish-towns-encoded.txt")
-
-pickle_data(open("irish-towns-encoded.txt", "r"))
+encode_data(open("irish-towns-training.txt", "r"), "data.pickle")
