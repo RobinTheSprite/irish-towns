@@ -25,15 +25,15 @@ if os.path.exists("results.txt"):
 def build_generator():
     model = Sequential()
 
-    model.add(Dense(128, input_shape = noise_shape))
+    model.add(Dense(100, input_shape = noise_shape))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU())
     model.add(Dropout(0.4))
-    model.add(Dense(256))
+    model.add(Dense(200))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU())
     model.add(Dropout(0.4))
-    model.add(Dense(1024))
+    model.add(Dense(400))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU())
     model.add(Dropout(0.4))
