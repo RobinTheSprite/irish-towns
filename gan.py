@@ -4,10 +4,14 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import \
     BatchNormalization, Input, Dense, \
     Activation, Flatten, Conv1D, MaxPooling1D, \
-    Reshape
+    Reshape, LeakyReLU, Dropout
 import pickle
+from sklearn.preprocessing import OneHotEncoder
 
 CHARSET = (' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú')
+
+onehot_labels = OneHotEncoder(sparse=False)
+onehot_labels = onehot_labels.fit_transform(list([i] for i in range(len(CHARSET))))
 
 name_shape = (50, 32)
 noise_shape = (100,)
@@ -21,12 +25,18 @@ if os.path.exists("results.txt"):
 def build_generator():
     model = Sequential()
 
-    model.add(Dense(256, input_shape = noise_shape, activation="relu"))
+    model.add(Dense(128, input_shape = noise_shape))
     model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU())
+    model.add(Dropout(0.4))
     model.add(Dense(256))
     model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU())
+    model.add(Dropout(0.4))
     model.add(Dense(1024))
     model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU())
+    model.add(Dropout(0.4))
     model.add(Dense(np.product(name_shape), activation="tanh"))
     model.add(Reshape(name_shape))
 
@@ -40,15 +50,15 @@ def build_generator():
 
 def build_discriminator():
     model = Sequential()
-    model.add(Conv1D(50, 2, input_shape = name_shape, activation="relu"))
+    model.add(Conv1D(50, 2, input_shape = name_shape))
     model.add(BatchNormalization(momentum=0.8))
-    model.add(MaxPooling1D(strides=2))
+    model.add(LeakyReLU(0.2))
+    model.add(Dropout(0.4))
+    model.add(Conv1D(100, 2))
     model.add(BatchNormalization(momentum=0.8))
-    model.add(Conv1D(50, 2, activation="relu"))
-    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(0.2))
+    model.add(Dropout(0.4))
     model.add(Flatten())
-    model.add(Dense(50))
-    model.add(BatchNormalization(momentum=0.8))
     model.add(Dense(1, activation="sigmoid"))
 
     name = Input(shape=name_shape)
