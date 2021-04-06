@@ -5,6 +5,10 @@ from sklearn.preprocessing import OneHotEncoder
 
 CHARSET = [' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú']
 
+onehot_labels = OneHotEncoder(sparse=False)
+onehot_labels = onehot_labels.fit_transform(list([i] for i in range(len(CHARSET))))
+
+
 def get_unique_names(f, filename):
     filtered = set()
     for line in f:
@@ -15,10 +19,15 @@ def get_unique_names(f, filename):
     f1.writelines(filtered)
 
 
-def encode_data(f, filename):
-    onehot_labels = OneHotEncoder(sparse=False)
-    onehot_labels = onehot_labels.fit_transform(list([i] for i in range(len(CHARSET))))
+def onehot_encoding(char):
+    return onehot_labels[CHARSET.index(char)]
 
+
+def float_encoding(char):
+    return CHARSET.index(char) / len(CHARSET)
+
+
+def encode_data(f, filename, encoder):
     encodings = []
     for line in f:
         line = line.strip("\n")
@@ -26,7 +35,7 @@ def encode_data(f, filename):
 
         numeric = []
         for char in line:
-            numeric.append(onehot_labels[CHARSET.index(char)])
+            numeric.append(encoder(char))
 
         encodings.append(numeric)
 
@@ -63,7 +72,7 @@ def make_random_strings():
     f.writelines(strings)
     f.close()
     f = open("random-strings.txt", "r")
-    encode_data(f, "random-strings-encoded.txt")
+    encode_data(f, "random-strings-encoded.txt", float_encoding)
 
 def make_testing_data(input_file, training_data_file, testing_data_file):
     f = open(input_file, "r")
@@ -88,4 +97,4 @@ def make_testing_data(input_file, training_data_file, testing_data_file):
     f.writelines(testing_names)
 
 
-encode_data(open("irish-towns-training.txt", "r"), "data.pickle")
+encode_data(open("irish-towns-training.txt", "r"), "float.pickle", float_encoding)
