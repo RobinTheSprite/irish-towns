@@ -135,6 +135,6 @@ prediction = discriminator(name)
 combined = Model(z, prediction)
 combined.compile(loss="binary_crossentropy", optimizer="adam")
 
-train(epochs = 1000, save_interval = 100)
+train(epochs = 1001, save_interval = 100)
 
 # generator.save("generator.model.h5")
