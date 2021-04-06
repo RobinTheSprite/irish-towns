@@ -33,6 +33,8 @@ def build_generator():
     noise = Input(shape=noise_shape)
     name = model(noise)
 
+    model.summary()
+
     return Model(noise, name)
 
 
@@ -51,6 +53,8 @@ def build_discriminator():
 
     name = Input(shape=name_shape)
     validity = model(name)
+
+    model.summary()
 
     return Model(name, validity)
 
