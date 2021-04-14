@@ -100,8 +100,10 @@ def make_testing_data(input_file, training_data_file, testing_data_file):
 def make_ngram_sequences(f, sequence_length):
     data = []
     labels = []
+    town_index = 0
     for town in f:
         town = town.strip()
+        town = ''.join('#' for _ in range(sequence_length)) + town
         for i in range(len(town) - sequence_length):
             seq_in = town[i:i + sequence_length]
             seq_out = town[i + sequence_length]
