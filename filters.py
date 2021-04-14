@@ -97,4 +97,25 @@ def make_testing_data(input_file, training_data_file, testing_data_file):
     f.writelines(testing_names)
 
 
-encode_data(open("irish-towns-training.txt", "r"), "float.pickle", float_encoding)
+def make_ngram_sequences(f, sequence_length):
+    data = []
+    labels = []
+    for town in f:
+        town = town.strip()
+        for i in range(len(town) - sequence_length):
+            seq_in = town[i:i + sequence_length]
+            seq_out = town[i + sequence_length]
+            data.append(list(CHARSET.index(char) for char in seq_in))
+            labels.append(onehot_labels[CHARSET.index(seq_out)])
+
+    data = np.array(data)
+    data = data / len(CHARSET)
+    labels = np.array(labels)
+
+    f.close()
+    pickle.dump(data, open("irish-towns-ngram-training-data.pickle", "wb"))
+    pickle.dump(labels, open("irish-towns-ngram-training-labels.pickle", "wb"))
+
+
+make_ngram_sequences(open("irish-towns-training.txt", "r"), 3)
+# encode_data(open("irish-towns-training.txt", "r"), "float.pickle", float_encoding)
