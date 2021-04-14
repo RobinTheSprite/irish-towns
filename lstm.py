@@ -2,9 +2,7 @@
 import numpy as np
 import sys
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.preprocessing import OneHotEncoder
 import pickle
 
