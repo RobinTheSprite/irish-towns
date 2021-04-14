@@ -104,11 +104,15 @@ def make_ngram_sequences(f, sequence_length):
     for town in f:
         town = town.strip()
         town = ''.join('#' for _ in range(sequence_length)) + town
+        if town_index % 3 == 0:
+            town = town.ljust(25)
         for i in range(len(town) - sequence_length):
             seq_in = town[i:i + sequence_length]
             seq_out = town[i + sequence_length]
             data.append(list(CHARSET.index(char) for char in seq_in))
             labels.append(onehot_labels[CHARSET.index(seq_out)])
+
+        town_index += 1
 
     data = np.array(data)
     data = data / len(CHARSET)
