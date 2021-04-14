@@ -46,7 +46,7 @@ def sample(preds, temperature=1.0):
     preds = np.log(preds) / temperature
     exp_preds = np.exp(preds)
     preds = exp_preds / np.sum(exp_preds)
-    preds = preds.reshape((32,))
+    preds = preds.reshape((preds.shape[1],))
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
@@ -70,5 +70,5 @@ def generate():
 
     print(name)
 
-train()
+# train()
 generate()
