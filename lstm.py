@@ -33,7 +33,7 @@ def train():
     model = define_model()
     model.compile(optimizer='adam', loss='categorical_crossentropy')
     # fit model
-    model.fit(data, labels, epochs=100, batch_size=64)
+    model.fit(data, labels, epochs=50, batch_size=64)
     model.save_weights("lstm-weights.hdf5", overwrite=True)
 
 
