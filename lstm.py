@@ -55,20 +55,20 @@ def generate(number_of_names=1):
 
     for _ in range(number_of_names):
         name = ''.join('#' for _ in range(sequence_length))
-    seed = name
-    for _ in range(50):
-        x = np.array(list(CHARSET.index(char) / len(CHARSET) for char in seed))
-        x = x.reshape((1, len(x), 1))
+        seed = name
+        for _ in range(25):
+            x = np.array(list(CHARSET.index(char) / len(CHARSET) for char in seed))
+            x = x.reshape((1, len(x), 1))
 
-        prediction = model.predict(x)
-        result = CHARSET[sample(prediction, 0.5)]
-        name += result
+            prediction = model.predict(x)
+            result = CHARSET[sample(prediction, 0.5)]
+            name += result
 
-        seed += result
-        seed = seed[1:]
+            seed += result
+            seed = seed[1:]
 
         name = name[sequence_length:]
-    print(name)
+        print(name)
 
 # train()
 generate(10)
