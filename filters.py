@@ -123,5 +123,6 @@ def make_ngram_sequences(f, sequence_length):
     pickle.dump(labels, open("irish-towns-ngram-training-labels.pickle", "wb"))
 
 
-make_ngram_sequences(open("irish-towns-training.txt", "r"), 3)
+make_ngram_sequences(open("irish-towns-training.txt", "r"), 4)
 # encode_data(open("irish-towns-training.txt", "r"), "float.pickle", float_encoding)
+
