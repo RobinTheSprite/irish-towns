@@ -48,11 +48,13 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 
-def generate():
+def generate(number_of_names=1):
     model = define_model()
     model.load_weights("lstm-weights.hdf5")
     model.compile(optimizer='adam', loss='categorical_crossentropy')
-    name = "lis"
+
+    for _ in range(number_of_names):
+        name = ''.join('#' for _ in range(sequence_length))
     seed = name
     for _ in range(50):
         x = np.array(list(CHARSET.index(char) / len(CHARSET) for char in seed))
@@ -65,7 +67,8 @@ def generate():
         seed += result
         seed = seed[1:]
 
+        name = name[sequence_length:]
     print(name)
 
 # train()
-generate()
+generate(10)
