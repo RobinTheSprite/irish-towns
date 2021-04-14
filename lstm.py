@@ -11,17 +11,16 @@ CHARSET = [' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 onehot_labels = OneHotEncoder(sparse=False)
 onehot_labels = onehot_labels.fit_transform(list([i] for i in range(len(CHARSET))))
 
-# define input sequence
 data = pickle.load(open("irish-towns-ngram-training-data.pickle", "rb"))
 labels = pickle.load(open("irish-towns-ngram-training-labels.pickle", "rb"))
 
 # reshape input into [samples, timesteps, features]
-n_in = data.shape[1]
-sequence = data.reshape((data.shape[0], n_in, 1))
+sequence_length = data.shape[1]
+sequence = data.reshape((data.shape[0], sequence_length, 1))
 
 def define_model():
     model = Sequential()
-    model.add(LSTM(100, input_shape=(n_in,1), return_sequences=True))
+    model.add(LSTM(100, input_shape=(sequence_length,1), return_sequences=True))
     model.add(Dropout(0.2))
     model.add(LSTM(100))
     model.add(Dropout(0.2))
