@@ -20,9 +20,9 @@ data = data.reshape((data.shape[0], sequence_length, 1))
 
 def define_model():
     model = Sequential()
-    model.add(LSTM(100, input_shape=(sequence_length,1), return_sequences=True))
+    model.add(LSTM(128, input_shape=(sequence_length,1), return_sequences=True))
     model.add(Dropout(0.2))
-    model.add(LSTM(100))
+    model.add(LSTM(128))
     model.add(Dropout(0.2))
     model.add(Dense(len(CHARSET), activation='softmax'))
 
