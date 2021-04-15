@@ -10,8 +10,8 @@ from charset import CHARSET, onehot_labels
 data = pickle.load(open("irish-towns-ngram-training-data.pickle", "rb"))
 labels = pickle.load(open("irish-towns-ngram-training-labels.pickle", "rb"))
 
-# reshape input into [samples, timesteps, features]
 sequence_length = data.shape[1]
+# [samples, timesteps, features]
 data = data.reshape((data.shape[0], sequence_length, 1))
 
 def define_model():
@@ -28,8 +28,7 @@ def define_model():
 def train():
     model = define_model()
     model.compile(optimizer='adam', loss='categorical_crossentropy')
-    # fit model
-    model.fit(data, labels, epochs=50, batch_size=64)
+    model.fit(data, labels, epochs=100, batch_size=64)
     model.save_weights("lstm-weights.hdf5", overwrite=True)
 
 
