@@ -17,3 +17,4 @@ results.txt
 irish-towns-ngram-training-data.pickle
 irish-towns-ngram-training-labels.pickle
 lstm-weights.hdf5
+__pycache__/
