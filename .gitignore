@@ -14,3 +14,6 @@ List of cities and towns in England - Simple English Wikipedia, the free encyclo
 random-strings-encoded.txt
 random-strings.txt
 results.txt
+irish-towns-ngram-training-data.pickle
+irish-towns-ngram-training-labels.pickle
+lstm-weights.hdf5
