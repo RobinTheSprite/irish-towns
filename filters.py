@@ -54,50 +54,8 @@ def lowercase(f, filename):
     f1 = open(filename, "w")
     f1.writelines(lowercased)
 
-def make_random_strings():
 
-    strings = []
-    for _ in range(1325):
-        string_length = random.randint(2, 10)
-        string = str()
-        for _ in range(string_length):
-            string += random.choice(CHARSET)
-
-        string = string.strip()
-        string += "\n"
-        if not string.isspace():
-            strings.append(string)
-
-    f = open("random-strings.txt", "w")
-    f.writelines(strings)
-    f.close()
-    f = open("random-strings.txt", "r")
-    encode_data(f, "random-strings-encoded.txt", float_encoding)
-
-def make_testing_data(input_file, training_data_file, testing_data_file):
-    f = open(input_file, "r")
-    names = list(f)
-    names = list(map(str.strip, names))
-
-    testing_names = []
-    while len(names) > 1000:
-        name = random.choice(names)
-        names.remove(name)
-        name += "\n"
-        testing_names.append(name)
-
-    f.close()
-
-    f = open(training_data_file, "w")
-    names = "\n".join(names)
-    f.writelines(names)
-    f.close()
-
-    f = open(testing_data_file, "w")
-    f.writelines(testing_names)
-
-
-def make_ngram_sequences(f, sequence_length):
+def make_ngram_sequences(f, file_pattern, sequence_length):
     data = []
     labels = []
     town_index = 0
@@ -119,10 +77,9 @@ def make_ngram_sequences(f, sequence_length):
     labels = np.array(labels)
 
     f.close()
-    pickle.dump(data, open("irish-towns-ngram-training-data.pickle", "wb"))
-    pickle.dump(labels, open("irish-towns-ngram-training-labels.pickle", "wb"))
+    pickle.dump(data, open(f"{file_pattern}-data.pickle", "wb"))
+    pickle.dump(labels, open(f"{file_pattern}-labels.pickle", "wb"))
 
 
-make_ngram_sequences(open("irish-towns-training.txt", "r"), 4)
-# encode_data(open("irish-towns-training.txt", "r"), "float.pickle", float_encoding)
+make_ngram_sequences(open("irish-towns-training.txt", "r"), "irish-towns-ngram-training", 4)
 
