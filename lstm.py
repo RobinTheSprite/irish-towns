@@ -5,11 +5,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.preprocessing import OneHotEncoder
 import pickle
-
-CHARSET = [' ', '#', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú']
-
-onehot_labels = OneHotEncoder(sparse=False)
-onehot_labels = onehot_labels.fit_transform(list([i] for i in range(len(CHARSET))))
+from charset import CHARSET, onehot_labels
 
 data = pickle.load(open("irish-towns-ngram-training-data.pickle", "rb"))
 labels = pickle.load(open("irish-towns-ngram-training-labels.pickle", "rb"))
@@ -70,5 +66,5 @@ def generate(number_of_names=1):
         name = name[sequence_length:]
         print(name)
 
-# train()
+train()
 generate(10)
