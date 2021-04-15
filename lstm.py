@@ -7,8 +7,9 @@ from sklearn.preprocessing import OneHotEncoder
 import pickle
 from charset import CHARSET, onehot_labels
 
-data = pickle.load(open("irish-towns-ngram-training-data.pickle", "rb"))
-labels = pickle.load(open("irish-towns-ngram-training-labels.pickle", "rb"))
+n = 3
+data = pickle.load(open(f"irish-towns-{n}gram-training-data.pickle", "rb"))
+labels = pickle.load(open(f"irish-towns-{n}gram-training-labels.pickle", "rb"))
 
 sequence_length = data.shape[1]
 # [samples, timesteps, features]
@@ -25,11 +26,11 @@ def define_model():
     return model
 
 
-def train():
+def train(filename):
     model = define_model()
     model.compile(optimizer='adam', loss='categorical_crossentropy')
-    model.fit(data, labels, epochs=100, batch_size=64)
-    model.save_weights("lstm-weights.hdf5", overwrite=True)
+    model.fit(data, labels, epochs=50, batch_size=64)
+    model.save_weights(filename, overwrite=True)
 
 
 # from https://github.com/fchollet/deep-learning-with-python-notebooks/blob/master/8.1-text-generation-with-lstm.ipynb
@@ -43,9 +44,9 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 
-def generate(number_of_names=1):
+def generate(filename, number_of_names=1):
     model = define_model()
-    model.load_weights("lstm-weights.hdf5")
+    model.load_weights(filename)
     model.compile(optimizer='adam', loss='categorical_crossentropy')
 
     for _ in range(number_of_names):
@@ -65,5 +66,6 @@ def generate(number_of_names=1):
         name = name[sequence_length:]
         print(name)
 
-train()
-generate(10)
+filename = f"lstm-{n}gram-weights.hdf5"
+train(filename)
+generate(filename, 50)
