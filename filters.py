@@ -75,6 +75,6 @@ def make_ngram_sequences(f, file_pattern, sequence_length):
     pickle.dump(data, open(f"{file_pattern}-data.pickle", "wb"))
     pickle.dump(labels, open(f"{file_pattern}-labels.pickle", "wb"))
 
-n = 3
+n = 4
 make_ngram_sequences(open("irish-towns-all.txt", "r"), f"irish-towns-{n}gram-training", n)
 

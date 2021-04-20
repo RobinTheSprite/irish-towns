@@ -7,7 +7,7 @@ from sklearn.preprocessing import OneHotEncoder
 import pickle
 from charset import CHARSET, onehot_labels
 
-n = 3
+n = 4
 data = pickle.load(open(f"irish-towns-{n}gram-training-data.pickle", "rb"))
 labels = pickle.load(open(f"irish-towns-{n}gram-training-labels.pickle", "rb"))
 
